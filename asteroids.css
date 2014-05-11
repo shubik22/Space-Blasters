@@ -1,0 +1,147 @@
+html, body, h1, h2, h3, div, canvas, ul, strong {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-family: sans-serif;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+h3 {
+  color: white;
+  text-align: center;
+  font-size: 14px;
+}
+
+a {
+  color: green;
+}
+
+a:hover {
+  color: #34C504;
+}
+
+.hidden {
+  display: none;
+}
+
+canvas {
+  background: url("hubble.jpg");
+  background-size: cover;
+  display: block;
+  margin: 20px auto;
+  border: 3px solid gray;
+  border-radius: 3px;
+}
+
+body {
+  background: black;
+}
+
+h1 {
+  color: white;
+  font-size: 42px;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+strong {
+  font-weight: bold;
+}
+
+.button {
+  width: 120px;
+  margin: auto;
+  margin-bottom: 20px;
+  
+  border: 2px solid grey;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  background: #E0080D;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #ED6F43;
+  box-shadow: 0px 0px 0.5px 0.5px #414141;
+}
+
+.name {
+  text-align: center;
+  color: white;
+}
+
+.name .button {
+  padding: 5px 10px;
+  font-size: 18px;
+}
+
+.name > .name-text {
+  font-size: 25px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.name input {
+  font-size: 20px;
+  width: 200px;
+  padding: 3px;
+  margin-right: 20px;
+}
+
+.logged-in {
+  text-align: center;
+  color: white;
+  font-style: italic;
+  padding-bottom: 10px;
+}
+
+.clock {
+  color: white;
+  text-align: center;
+}
+
+.instructions {
+  background: white;
+  border: 2px solid grey;
+  border-radius: 8px;
+  width: 240px;
+  margin-bottom: 40px;
+  padding: 10px;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 30px;
+}
+
+.instructions > h2 {
+  font-size: 20px;
+  padding-bottom: 5px;
+}
+
+.instructions > table {
+  margin: auto;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+
+footer > h3 {
+  font-size: 12px;
+  text-align: right;
+}

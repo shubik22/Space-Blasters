@@ -1,0 +1,81 @@
+<head>
+  <title>Asteroids!</title>
+</head>
+
+<body>
+  <h1>
+    Asteroids!
+  </h1>
+    
+  {{> lobby }}
+  {{> gamePlay }}
+
+  <footer>
+    <h3>
+      Created by <a href="https://www.linkedin.com/in/samsweeney">Sam Sweeney</a>
+    </h3>
+    <h3>
+     (View source <a href="https://github.com/shubik22/asteroids">here</a>)
+    </h3>
+  </footer>
+</body>
+
+<template name="lobby">
+  {{#if show }}
+    {{#if username}}
+      <div class="logged-in">
+        Playing as {{username}}
+      </div>
+      <div class="button new-game">
+        New Game
+      </div>
+    {{else}}
+      <div class="name">
+        <div class="name-text">What's your name?</div>
+        <div class="name-input">
+          <input type="text" class="username">
+          <span class="button set-name">
+            Let's Go!
+          </span>
+        </div>
+      </div>
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="gamePlay">
+  {{#if show }}
+    <div class="clock">
+      {{clock}}
+    </div>
+    <canvas height="600" width="600"></canvas>
+    <div class="button lobby">
+      Leave Game
+    </div>
+  {{/if}}
+</template>
+
+<template name="instructions">
+  <div class="instructions">
+    <h2>How to Play</h2>
+    <table>
+      <tr>
+        <td>
+          <strong>&#8592;</strong>: Rotate left
+        </td>
+        <td>
+          <strong>&#8594;</strong>: Rotate right
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>&#8593;</strong>: Accelerate
+        </td>
+        <td>
+          <strong>&#8595;</strong>: Decelerate
+        </td>
+      </tr>
+    </table>
+    <strong>Spacebar</strong>: Shoot bullet
+  </div>
+</template>
