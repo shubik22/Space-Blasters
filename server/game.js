@@ -1,5 +1,5 @@
 var createObjects = function(player_id, game_id) {
-  for (var i = 0; i < 1; i++) {
+  for (var i = 0; i < 10; i++) {
     var asteroid = Asteroid.randomAsteroid(game_id);
     Asteroids.insert(asteroid);    
   }
