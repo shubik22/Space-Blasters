@@ -1,9 +1,6 @@
-Games = new Meteor.Collection('games');
-
 Players = new Meteor.Collection('players');
-
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
-  });
-}
+Games = new Meteor.Collection('games');
+Asteroids = new Meteor.Collection('asteroids');
+Bullets = new Meteor.Collection('bullets');
+Ships = new Meteor.Collection('ships');
+Records = new Meteor.Collection('records');

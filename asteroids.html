@@ -9,25 +9,26 @@
     
   {{> lobby }}
   {{> gamePlay }}
+  {{> leaderboard }}
 
   <footer>
     <h3>
       Created by <a href="https://www.linkedin.com/in/samsweeney">Sam Sweeney</a>
     </h3>
     <h3>
-     (View source <a href="https://github.com/shubik22/asteroids">here</a>)
+     View source <a href="https://github.com/shubik22/asteroids">here</a>
     </h3>
   </footer>
 </body>
 
 <template name="lobby">
-  {{#if show }}
+  {{#if show}}
     {{#if username}}
-      <div class="logged-in">
-        Playing as {{username}}
-      </div>
       <div class="button new-game">
         New Game
+      </div>
+      <div class="button leaderboard">
+        Leaderboard
       </div>
     {{else}}
       <div class="name">
@@ -44,13 +45,27 @@
 </template>
 
 <template name="gamePlay">
-  {{#if show }}
+  {{#if show}}
     <div class="clock">
-      {{clock}}
+      Time: {{clock}}
     </div>
     <canvas height="600" width="600"></canvas>
     <div class="button lobby">
       Leave Game
+    </div>
+  {{/if}}
+</template>
+
+<template name="leaderboard">
+  {{#if show}}
+    <h2>LeaderBoard</h2>
+    <ol class="leaderboard">
+      {{#each records}}
+        <li>{{username}} ({{time}} seconds)</li>
+      {{/each}}
+    </ol>
+    <div class="button lobby">
+      Return to Lobby
     </div>
   {{/if}}
 </template>

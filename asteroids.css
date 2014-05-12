@@ -1,4 +1,4 @@
-html, body, h1, h2, h3, div, canvas, ul, strong {
+html, body, h1, h2, h3, div, canvas, ul, ol, li strong {
   margin: 0;
   border: 0;
   padding: 0;
@@ -12,6 +12,21 @@ ul {
 
 a {
   text-decoration: none;
+}
+
+h1 {
+  color: white;
+  font-size: 42px;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+h2 {
+  color: white;
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 20px;
 }
 
 h3 {
@@ -45,27 +60,19 @@ body {
   background: black;
 }
 
-h1 {
-  color: white;
-  font-size: 42px;
-  text-align: center;
-  margin-top: 15px;
-  margin-bottom: 10px;
-}
-
 strong {
   font-weight: bold;
 }
 
 .button {
-  width: 120px;
+  width: 150px;
   margin: auto;
   margin-bottom: 20px;
   
   border: 2px solid grey;
   border-radius: 8px;
   text-align: center;
-  font-size: 16px;
+  font-size: 20px;
   background: #E0080D;
   color: white;
   padding: 10px;
@@ -87,10 +94,14 @@ strong {
   font-size: 18px;
 }
 
+.new-game {
+  margin-top: 50px;
+}
+
 .name > .name-text {
+  margin-top: 50px;
+  margin-bottom: 20px;
   font-size: 25px;
-  margin-top: 30px;
-  margin-bottom: 10px;
 }
 
 .name input {
@@ -105,6 +116,32 @@ strong {
   color: white;
   font-style: italic;
   padding-bottom: 10px;
+}
+
+.leaderboard {
+  list-style-position: inside;
+}
+
+.leaderboard > li {
+  width: 200px;
+  background: #E0080D;
+  margin: auto;
+  margin-bottom: 10px;
+  
+  border: 1px solid white;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  color: white;
+  padding: 6px;
+}
+
+.leaderboard > li:last-of-type {
+  margin-bottom: 30px;
+}
+
+.leaderboard > li:hover {
+  background: #ED6F43;
 }
 
 .clock {

@@ -1,32 +1,74 @@
+var createObjects = function(player_id, game_id) {
+  for (var i = 0; i < 1; i++) {
+    var asteroid = Asteroid.randomAsteroid(game_id);
+    Asteroids.insert(asteroid);    
+  }
+  
+  var ship = new Ship(player_id, game_id);
+  Ships.insert(ship);
+};
+
+// Game play functions
+
 Meteor.methods({
   start_new_game: function(player_id) {
-    var gameId = Games.insert({
-      ship1: null,
-      ship2: null,
-      asteroids: null,
-      bullets: null,
-      clock: 0
+    var game_id = Games.insert({
+      clock: 0,
+      player_id: player_id
     });
 
-    Players.update({_id: player_id}, {$set: {game_id: gameId}});
+    Players.update(player_id, {$set: {game_id: game_id}});
+    createObjects(player_id, game_id);
 
-    var clock = 1;
+    var clock = 0;
     
     var interval = Meteor.setInterval(function() {
-      Games.update(gameId, {$set: {clock: clock}});
-      clock += 1;
+      Games.update(game_id, {$set: {clock: clock}});
+      clock += 0.03;
       
-      if (clock === 60) {
+      if (Asteroids.find({game_id: game_id}).count() === 0) {
+        var username = Players.findOne(player_id).username;
+        Records.insert({username: username, time: clock});
+
         Meteor.clearInterval(interval);
       }
-    }, 1000);
+    }, 30);
     
-    return gameId;
+    return game_id;
+  },
+
+  end_game: function(player_id) {
+    var player = Players.findOne(player_id);
+    var game_id = player.game_id;
+    var ship = Ships.findOne({player_id: player_id})
+    
+    if (Games.findOne(game_id)) {
+      Players.update(player_id, {$set: {game_id: null}});
+      Games.remove(game_id);
+      Ships.remove(ship._id);
+      Asteroids.remove({game_id: game_id});
+      Bullets.remove({game_id: game_id});      
+    }
   }
 });
 
+// Publish functions
 
-Meteor.publish('players');
+Meteor.publish('players', function() {
+  return Players.find();
+});
+Meteor.publish('records', function() {
+  return Records.find({}, {sort: {time: 1}, limit: 10});
+});
 Meteor.publish('games', function(id) {
   return Games.find({_id: id});
-})
+});
+Meteor.publish('asteroids', function(game_id) {
+  return Asteroids.find({game_id: game_id});
+});
+Meteor.publish('bullets', function(game_id) {
+  return Bullets.find({game_id: game_id});
+});
+Meteor.publish('ships', function(game_id) {
+  return Ships.find({game_id: game_id});
+});
