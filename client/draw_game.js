@@ -14,18 +14,23 @@ draw = function(ctx, player_id, game_id) {
     drawShip(ship, ctx);
   });
   
-  var clock = Games.findOne(game_id).clock;
+  var game = Games.findOne(game_id);
   var player = Players.findOne(player_id);
   var hits = player.hits;
-  if (player.opponent_id) {
-    var opponentHits = Players.findOne(player.opponent_id).hits
+  
+  if (game.type === "multi" && game.player1_id === player_id) {
+    var opponentHits = Players.findOne(game.player2_id).hits;
+  } else if (game.type === "multi" && game.player2_id === player_id) {
+    var opponentHits = Players.findOne(game.player1_id).hits;
   } else {
     var opponentHits = "none";
   }
   
-  drawTime(ctx, clock, hits, opponentHits);
+  drawTime(ctx, game.clock, hits, opponentHits);
   
-  if (ships.length === 0) {
+  var ship = LocalShips.find({player_id: player_id, game_id: game_id});
+  
+  if (!ship) {
     ctx.fillStyle = "red";
     ctx.font = "20pt Arial";
     ctx.textAlign = "center";

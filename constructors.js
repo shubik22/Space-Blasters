@@ -106,7 +106,7 @@ Ship.spawnSpot = function(player_id) {
 Ship.color = function(player_id, game_id) {
   var game = Games.findOne(game_id);
   
-  if (game.type === "single" || game.player1_id === player._id) {
+  if (game.type === "single" || game.player1_id === player_id) {
     return "blue"
   } else {
     return "red"

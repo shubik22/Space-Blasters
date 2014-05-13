@@ -123,7 +123,7 @@ var respawnShip = function(player_id, game_id) {
       var ship = new Ship(player_id, game_id);
       LocalShips.insert(ship);
     }
-    
+
     if (ship || !game) Meteor.clearInterval(interval);
   }, 100)
 };

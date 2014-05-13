@@ -29,11 +29,10 @@ Meteor.methods({
       game_type: type,
       hits: 0,
       winner: false}});
-    createAsteroids(game_id);
-
     var clock = 0;
     
     if (type === "single") {
+      createAsteroids(game_id);
       var interval = Meteor.setInterval(function() {
         Games.update(game_id, {$set: {clock: clock}});
         clock += 0.03;

@@ -93,7 +93,7 @@ observeGames = function(player_id) {
           _.each(handles, function(handle) {
             handle.stop();
           })
-          drawMultiWinMessage(player_id, ctx);
+          drawWinMessage(player_id, ctx);
         };
         
         if (!game) {
@@ -109,7 +109,7 @@ observeGames = function(player_id) {
 
 var setWinner = function(game) {
   var player1 = Players.findOne(game.player1_id);
-  var player2 = Players.findOne(game.player2._id);
+  var player2 = Players.findOne(game.player2_id);
   
   if (player1.score >= player2.score) {
     Players.update(player1._id, {$set: {winner: true}});
@@ -133,19 +133,19 @@ var observeShips = function(player_id, game_id) {
     player_id: {$ne: player_id}
   }).observeChanges({
     added: function(id, fields) {
-      // console.log("Ship added");
+      console.log("Ship added", id);
       fields.server_id = id;
       LocalShips.insert(fields);
     },
     
     changed: function(id, fields) {
-      // console.log("Ship changed")
+      console.log("Ship changed", id)
       var ship = LocalShips.findOne({server_id: id});
       LocalShips.update(ship._id, {$set: fields});
     },
     
     removed: function(id) {
-      // console.log("Ship removed")
+      console.log("Ship removed", id)
       var ship = LocalShips.findOne({server_id: id});
       LocalShips.remove(ship._id);
     }
@@ -160,20 +160,21 @@ var observeLocalShips = function(player_id, game_id) {
       game_id: game_id
   }).observeChanges({
     added: function(id, fields) {
+      console.log("LocalShip added", id)
       addKeybindings(id, player_id, game_id);
       fields.client_id = id;
       Ships.insert(fields);
     },
 
     changed: function(id, fields) {
-      // console.log("LocalShip changed")
+      console.log("LocalShip changed", id)
       var ship = Ships.findOne({client_id: id});
       Ships.update(ship._id, {$set: fields});
     },
 
     removed: function(id) {
       removeKeybindings();
-      // console.log("LocalShip removed")
+      console.log("LocalShip removed", id)
       var ship = Ships.findOne({client_id: id});
       Ships.remove(ship._id);
     }
