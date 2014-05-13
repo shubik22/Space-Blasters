@@ -1,5 +1,5 @@
 observeGames = function(player_id) {
-  Games.find({player_id: player_id}).observeChanges({
+  Games.find({player_id: player_id, type: "single"}).observeChanges({
     added: function(game_id) {
       var handles = setObservers(player_id, game_id);
 

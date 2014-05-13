@@ -13,4 +13,7 @@ TODO
 -- change win message to show winning player's name
 -- two types of records (single/multiplayer)
 
+-- splash screen: allow players to hit "enter" to set name
+
+
 -- what happens when one player leaves?

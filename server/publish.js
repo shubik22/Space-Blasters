@@ -5,7 +5,7 @@ Meteor.publish('games', function() {
   return Games.find();
 });
 Meteor.publish('records', function() {
-  return Records.find({}, {sort: {"time": 1}, limit: 10});
+  return Records.find({});
 });
 Meteor.publish('asteroids', function(game_id) {
   return Asteroids.find({game_id: game_id});

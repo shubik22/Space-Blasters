@@ -14,10 +14,16 @@ draw = function(ctx, player_id, game_id) {
     drawShip(ship, ctx);
   });
   
-  var hits = Players.findOne(player_id).hits;
   var clock = Games.findOne(game_id).clock;
+  var player = Players.findOne(player_id);
+  var hits = player.hits;
+  if (player.opponent_id) {
+    var opponentHits = Players.findOne(player.opponent_id).hits
+  } else {
+    var opponentHits = "none";
+  }
   
-  drawTime(ctx, hits, clock);
+  drawTime(ctx, clock, hits, opponentHits);
   
   if (ships.length === 0) {
     ctx.fillStyle = "red";
@@ -102,10 +108,13 @@ var drawShip = function(ship, ctx) {
   ctx.fill();
 };
 
-var drawTime = function(ctx, hits, clock) {
+var drawTime = function(ctx, clock, hits, opponentHits) {
   ctx.fillStyle = "#DE2BC6";
   ctx.font = "12pt Arial";
   ctx.textAlign = "left";
   ctx.fillText("Time: " + Math.round(clock), 10, 20);
   ctx.fillText("Asteroids Hit: " + hits, 10, 40);
+  if (opponentHits >= 0) {
+    ctx.fillText("Opponent Hits: " + opponentHits, 10, 60);
+  }
 };

@@ -82,7 +82,7 @@ Asteroid.randomVel = function() {
 // SHIP
 
 Ship = function(player_id, game_id) {
-  this.pos = [Game.DIM_X / 2, Game.DIM_X / 2];
+  this.pos = Ship.spawnSpot(player_id);
   this.angle = Math.PI;
   this.radius = 25;
   this.speed = 0;
@@ -90,3 +90,15 @@ Ship = function(player_id, game_id) {
   this.game_id = game_id;
   this.player_id = player_id;
 };
+
+Ship.spawnSpot = function(player_id) {
+  var player = Players.findOne(player_id);
+  
+  if (player.position === "first") {
+    return [Game.DIM_X / 3, Game.DIM_Y / 2];
+  } else if (player.position === "second") {
+    return [Game.DIM_X * 2 / 3, Game.DIM_Y / 2];
+  } else {
+    return [Game.DIM_X / 2, Game.DIM_X / 2];
+  }
+}

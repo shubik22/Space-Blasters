@@ -45,7 +45,7 @@ Template.leaderboard.show = function() {
 };
 
 Template.leaderboard.records = function() {
-  return Records.find({}, {sort: {time: 1}});
+  return Records.find({type: "single"}, {sort: {time: 1}});
 }
 
 Template.leaderboard.time = function() {
