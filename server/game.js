@@ -13,7 +13,10 @@ Meteor.methods({
       clock: 0,
       player_id: player_id
     });
-    Players.update(player_id, {$set: {game_id: game_id, winner: false}});
+    Players.update(player_id, {$set: {
+      game_id: game_id,
+      hits: 0,
+      winner: false}});
     createObjects(player_id, game_id);
 
     var clock = 0;

@@ -1,10 +1,16 @@
 TODO
 
--- make local collections of asteroids, bullets, ships
--- only push updates to server when (a) asteroid destroyed, (b) bullet disappears, (c) ship attribute changed
-
 -- namespace game logic properly
 -- add in global constants for game
-
--- insert to leaderboard: make sure it sorts automatically
 -- clean up old games (i.e. when player leaves)
+
+-- add on canvas: Time, Your Score (with color), Opponent's Score
+
+-- check for ship collisions
+-- check for ship/bullet collisions
+-- change spawn point for ship
+-- create score for current player
+-- change win message to show winning player's name
+-- two types of records (single/multiplayer)
+
+-- what happens when one player leaves?

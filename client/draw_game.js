@@ -1,4 +1,4 @@
-draw = function(ctx, game_id) {
+draw = function(ctx, player_id, game_id) {
   var ships = LocalShips.find({game_id: game_id}).fetch();
   var asteroids = LocalAsteroids.find({game_id: game_id}).fetch();
   var bullets = LocalBullets.find({game_id: game_id}).fetch();
@@ -13,6 +13,11 @@ draw = function(ctx, game_id) {
   _.each(ships, function(ship) {
     drawShip(ship, ctx);
   });
+  
+  var hits = Players.findOne(player_id).hits;
+  var clock = Games.findOne(game_id).clock;
+  
+  drawTime(ctx, hits, clock);
   
   if (ships.length === 0) {
     ctx.fillStyle = "red";
@@ -95,4 +100,12 @@ var drawShip = function(ship, ctx) {
   ctx.lineTo(base1Pos[0], base1Pos[1]);
   ctx.lineTo(base2Pos[0],base2Pos[1]);
   ctx.fill();
+};
+
+var drawTime = function(ctx, hits, clock) {
+  ctx.fillStyle = "#DE2BC6";
+  ctx.font = "12pt Arial";
+  ctx.textAlign = "left";
+  ctx.fillText("Time: " + Math.round(clock), 10, 20);
+  ctx.fillText("Asteroids Hit: " + hits, 10, 40);
 };

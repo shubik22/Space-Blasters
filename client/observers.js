@@ -9,15 +9,15 @@ observeGames = function(player_id) {
       var interval = Meteor.setInterval(function() {
         var game = Games.findOne(game_id);
         
-        moveObjects(game_id);
+        moveObjects(player_id, game_id);
         
         var canvas = document.getElementsByTagName("canvas")[0];
         if (canvas && game) {
           var ctx = canvas.getContext("2d");
-          draw(ctx, game_id);
+          draw(ctx, player_id, game_id);
         }
         // fix game.clock > 1
-        if (game && (game.clock > 1) && 
+        if (game  && (game.clock > 1) && 
                 Asteroids.find({game_id: game_id}).count() === 0) {
           Meteor.clearInterval(interval);
           var score = Games.findOne(game_id).clock
@@ -88,8 +88,7 @@ var observeLocalShips = function(player_id, game_id) {
       game_id: game_id
   }).observeChanges({
     added: function(id, fields) {
-      // console.log("LocalShip added");
-      addKeybindings(id, game_id);
+      addKeybindings(id, player_id, game_id);
       fields.client_id = id;
       Ships.insert(fields);
     },
@@ -165,7 +164,7 @@ var observeLocalBullets = function(player_id, game_id) {
   return handle;
 };
 
-var addKeybindings = function(id, game_id) {
+var addKeybindings = function(id, player_id, game_id) {
   var bindings = {
     'left': function(ship) {
       return {angle: (ship.angle + (Math.PI / 15))};
@@ -195,6 +194,7 @@ var addKeybindings = function(id, game_id) {
 
     var ship = LocalShips.findOne(id);
     LocalBullets.insert({
+      player_id: player_id,
       game_id: game_id,
       pos: ship.pos,
       vel: [Math.sin(ship.angle) * 15, Math.cos(ship.angle) * 15],

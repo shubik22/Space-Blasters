@@ -64,17 +64,6 @@ Template.gamePlay.show = function() {
   return Session.equals('page', 'gamePlay');
 };
 
-Template.gamePlay.clock = function() {
-  var clock = (game() ? game().clock : 0);
-  if (clock) {
-    return Math.round(clock);
-  } else if (player()) {
-    if (player().current_score) return Math.round(player().current_score);
-  } else {
-    debugger
-  }
-};
-
 Template.gamePlay.events({
   "click .button.lobby": function(event) {
     event.preventDefault();

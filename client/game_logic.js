@@ -2,9 +2,9 @@ Game = {};
 Game.DIM_X = 600;
 Game.DIM_Y = 600;
 
-moveObjects = function(game_id) {
+moveObjects = function(player_id, game_id) {
   moveAsteroids(game_id);
-  moveBullets(game_id);
+  moveBullets(player_id, game_id);
   moveShips(game_id);
 };
 
@@ -14,13 +14,14 @@ var moveAsteroids = function(game_id) {
   });
 };
 
-var moveBullets = function(game_id) {
+var moveBullets = function(player_id, game_id) {
   LocalBullets.find({game_id: game_id}).forEach(function(bullet) {
     LocalAsteroids.find({game_id: game_id}).forEach(function(asteroid) {
-      if (checkCollision(bullet, asteroid)) {
+      if (bullet.player_id === player_id && checkCollision(bullet, asteroid)) {
         LocalAsteroids.remove(asteroid._id);
         Asteroids.remove(asteroid.server_id);
         LocalBullets.remove(bullet._id);
+        Players.update(player_id, {$inc: {hits: 1}})
       }
     })
     if (LocalBullets.find(bullet._id)) moveBullet(bullet);
