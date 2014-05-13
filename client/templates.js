@@ -18,7 +18,7 @@ Template.lobby.events({
     event.preventDefault();
 
     Session.set("page", "gamePlay");
-    Meteor.call('start_new_game', Session.get('player_id'));
+    Meteor.call('start_new_game', Session.get('player_id'), "single");
   },
   
   "click .button.set-name": function(event) {

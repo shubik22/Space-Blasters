@@ -157,7 +157,7 @@ var observeLocalBullets = function(player_id, game_id) {
     removed: function(id) {
       // console.log("LocalBullet removed")
       var bullet = Bullets.findOne({client_id: id});
-      if (bullet) Bullets.remove(bullet);
+      if (bullet) Bullets.remove(bullet._id);
     }
   });
   

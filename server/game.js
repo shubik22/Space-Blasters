@@ -8,13 +8,24 @@ var createObjects = function(player_id, game_id) {
 // Game play functions
 
 Meteor.methods({
-  start_new_game: function(player_id) {
-    var game_id = Games.insert({
-      clock: 0,
-      player_id: player_id
-    });
+  start_new_game: function(player_id, type) {
+    if (type === "single") {
+      var game_id = Games.insert({
+        clock: 0,
+        player_id: player_id,
+        type: type
+      });
+    } else if (type === "multi") {
+      var game_id = Games.insert({
+        clock: 0,
+        player1_id: player_id,
+        type: type
+      });
+    }
     Players.update(player_id, {$set: {
       game_id: game_id,
+      game_type: type,
+      position: "first",
       hits: 0,
       winner: false}});
     createObjects(player_id, game_id);

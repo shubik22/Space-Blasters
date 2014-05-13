@@ -5,7 +5,7 @@ Game.DIM_Y = 600;
 moveObjects = function(player_id, game_id) {
   moveAsteroids(game_id);
   moveBullets(player_id, game_id);
-  moveShips(game_id);
+  moveShips(player_id, game_id);
 };
 
 var moveAsteroids = function(game_id) {
@@ -16,27 +16,55 @@ var moveAsteroids = function(game_id) {
 
 var moveBullets = function(player_id, game_id) {
   LocalBullets.find({game_id: game_id}).forEach(function(bullet) {
-    LocalAsteroids.find({game_id: game_id}).forEach(function(asteroid) {
-      if (bullet.player_id === player_id && checkCollision(bullet, asteroid)) {
-        LocalAsteroids.remove(asteroid._id);
-        Asteroids.remove(asteroid.server_id);
-        LocalBullets.remove(bullet._id);
-        Players.update(player_id, {$inc: {hits: 1}})
-      }
-    })
+    checkBulletAsteroid(bullet, player_id, game_id);
     if (LocalBullets.find(bullet._id)) moveBullet(bullet);
   });
 };
 
-var moveShips = function(game_id) {
+var checkBulletAsteroid = function(bullet, player_id, game_id) {
+  LocalAsteroids.find({game_id: game_id}).forEach(function(asteroid) {
+    if (bullet.player_id === player_id && checkCollision(bullet, asteroid)) {
+      LocalAsteroids.remove(asteroid._id);
+      Asteroids.remove(asteroid.server_id);
+      LocalBullets.remove(bullet._id);
+      Players.update(player_id, {$inc: {hits: 1}})
+    }
+  })
+};
+
+var moveShips = function(player_id, game_id) {
   LocalShips.find({game_id: game_id}).forEach(function(ship) {
-    LocalAsteroids.find({game_id: game_id}).forEach(function(asteroid) {
-      if (checkCollision(ship, asteroid)) {
-        resetGame(Session.get("player_id"), game_id);
-      }
-    })
+    checkShipAsteroid(ship, player_id, game_id);
+    checkShipBullet(ship, player_id, game_id);
+    checkShipShip(ship, player_id, game_id);
     if (LocalShips.find(ship._id)) moveShip(ship);
   });
+};
+
+var checkShipAsteroid = function(ship, player_id, game_id) {
+  LocalAsteroids.find({game_id: game_id}).forEach(function(asteroid) {
+    if (checkCollision(ship, asteroid)) resetShip(player_id, game_id);
+  })
+};
+
+var checkShipBullet = function(ship, player_id, game_id) {
+  LocalBullets.find({game_id: game_id}).forEach(function(bullet) {
+    if (ship.player_id === player_id && bullet.player_id != player_id) {
+      if (checkCollision(ship, bullet)) resetShip(player_id, game_id);
+    }
+    if (bullet.player_id === player_id && ship.player_id != player_id) {
+      if (checkCollision(ship, bullet)) LocalBullets.remove(bullet._id);
+    }
+  })
+};
+
+var checkShipShip = function(ship1, player_id, game_id) {
+  LocalShips.find({
+    game_id: game_id,
+    player_id: {$ne: player_id}
+  }).forEach(function(ship2) {
+    if (checkCollision(ship1, ship2)) resetShip(player_id, game_id);
+  })
 };
 
 var moveAsteroid = function(asteroid) {
@@ -78,17 +106,11 @@ var checkCollision = function(obj1, obj2) {
   return (distance < radii);
 };
 
-resetGame = function(player_id, game_id) {
+var resetShip = function(player_id, game_id) {
   var ship = LocalShips.findOne({player_id: player_id, game_id: game_id});
   var ship_id = ship && ship._id
 
   LocalShips.remove(ship_id);
-  LocalBullets.find({
-    player_id: player_id,
-    game_id: game_id
-  }).forEach(function(bullet) {
-    LocalBullets.remove(bullet._id)
-  });
   respawnShip(player_id, game_id);
 }
 
@@ -108,11 +130,16 @@ var respawnShip = function(player_id, game_id) {
 
 var clearForRespawn = function(game_id) {
   var asteroids = LocalAsteroids.find({game_id: game_id}).fetch();
-  return _.every(asteroids, function(asteroid) {
-    var xDiff = asteroid.pos[0] - Game.DIM_X/2;
-    var yDiff = asteroid.pos[1] - Game.DIM_Y/2;
+  var bullets = LocalBullets.find({game_id: game_id}).fetch();
+  var ships = LocalShips.find({game_id: game_id}).fetch();
+
+  var objects = asteroids.concat(bullets).concat(ships);
+
+  return _.every(objects, function(object) {
+    var xDiff = object.pos[0] - Game.DIM_X/2;
+    var yDiff = object.pos[1] - Game.DIM_Y/2;
     var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
-    return (distance > 100);
+    return (distance > (100 + object.radius));
   });
 };
 
