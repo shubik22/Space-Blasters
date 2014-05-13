@@ -1,5 +1,5 @@
 var createObjects = function(player_id, game_id) {
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i < 2; i++) {
     var asteroid = Asteroid.randomAsteroid(game_id);
     Asteroids.insert(asteroid);
   }
@@ -13,7 +13,7 @@ Meteor.methods({
       clock: 0,
       player_id: player_id
     });
-    Players.update(player_id, {$set: {game_id: game_id}});
+    Players.update(player_id, {$set: {game_id: game_id, winner: false}});
     createObjects(player_id, game_id);
 
     var clock = 0;
@@ -21,11 +21,14 @@ Meteor.methods({
     var interval = Meteor.setInterval(function() {
       Games.update(game_id, {$set: {clock: clock}});
       clock += 0.03;
-      if (Asteroids.find({game_id: game_id}).count() === 0) {
-        var username = Players.findOne(player_id).username;
-        Records.insert({username: username, time: clock});
       
+      if (Asteroids.find({game_id: game_id}).count() === 0) {
         Meteor.clearInterval(interval);
+        
+        var player = Players.findOne(player_id);
+        if (player.winner) {
+          Records.insert({username: player.username, time: clock});
+        }
       }
     }, 30);
     

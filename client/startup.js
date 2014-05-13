@@ -1,14 +1,3 @@
-// Utility Functions
-
-var player = function() {
-  return Players.findOne(Session.get("player_id"));
-};
-
-var game = function() {
-  var me = player();
-  return me && me.game_id && Games.findOne(me.game_id);
-};
-
 Meteor.startup(function() {
   var player_id = Players.insert({username: ""});
   Session.set('player_id', player_id);
@@ -19,12 +8,11 @@ Meteor.startup(function() {
 
   Deps.autorun(function() {
     if (Session.get('player_id')) {
-      var me = player();
+      var me = Players.findOne(Session.get("player_id"));
       if (me && me.game_id) {
         Meteor.subscribe('asteroids', me.game_id);
         Meteor.subscribe('bullets', me.game_id);
         Meteor.subscribe('ships', me.game_id);
-        console.log("subscribed with: ", me.game_id)
       }
     }
   });

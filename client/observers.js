@@ -24,7 +24,7 @@ observeGames = function(player_id) {
           var ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
           Players.update(
             Session.get("player_id"),
-            {$set: {current_score: score}}
+            {$set: {current_score: score, winner: true}}
           );
           Games.remove(game_id);
           _.each(handles, function(handle) {
@@ -51,7 +51,6 @@ var setObservers = function(player_id, game_id) {
   var bulletsHandle = observeBullets(player_id, game_id);  
   var localBulletsHandle = observeLocalBullets(player_id, game_id);
 
-  console.log("observers set", Date.now())
   return [shipHandle, localShipHandle,
           asteroidsHandle, bulletsHandle, localBulletsHandle];
 };

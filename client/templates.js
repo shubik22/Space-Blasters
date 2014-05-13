@@ -18,7 +18,6 @@ Template.lobby.events({
     event.preventDefault();
 
     Session.set("page", "gamePlay");
-    console.log('new game clicked')
     Meteor.call('start_new_game', Session.get('player_id'));
   },
   
@@ -71,6 +70,8 @@ Template.gamePlay.clock = function() {
     return Math.round(clock);
   } else if (player()) {
     if (player().current_score) return Math.round(player().current_score);
+  } else {
+    debugger
   }
 };
 
