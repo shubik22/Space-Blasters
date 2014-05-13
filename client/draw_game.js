@@ -1,4 +1,8 @@
-draw = function(asteroids, bullets, ships, ctx, game_id) {
+draw = function(ctx, game_id) {
+  var ships = LocalShips.find({game_id: game_id}).fetch();
+  var asteroids = LocalAsteroids.find({game_id: game_id}).fetch();
+  var bullets = LocalBullets.find({game_id: game_id}).fetch();
+  
   ctx.clearRect(0, 0, 600, 600);  // Fill in with global variables later
   _.each(asteroids, function(asteroid) {
     drawCircle(asteroid, ctx);

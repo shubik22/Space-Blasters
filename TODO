@@ -1,0 +1,10 @@
+TODO
+
+-- make local collections of asteroids, bullets, ships
+-- only push updates to server when (a) asteroid destroyed, (b) bullet disappears, (c) ship attribute changed
+
+-- namespace game logic properly
+-- add in global constants for game
+
+-- insert to leaderboard: make sure it sorts automatically
+-- clean up old games (i.e. when player leaves)

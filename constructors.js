@@ -21,15 +21,6 @@ MovingObject = MovingObject = function(pos, vel, radius, color,  game_id) {
   this.game_id = game_id;
 };
 
-MovingObject.prototype.isCollidedWith = function(otherObject) {
-  var xDiff = this.pos[0] - otherObject.pos[0];
-  var yDiff = this.pos[1] - otherObject.pos[1];
-  var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
-  var radii = this.radius + otherObject.radius;
-
-  return (distance < radii);
-};
-
 // ASTEROID
 
 Asteroid = function(pos, vel, radius, game_id) {
@@ -93,7 +84,7 @@ Asteroid.randomVel = function() {
 Ship = function(player_id, game_id) {
   this.pos = [Game.DIM_X / 2, Game.DIM_X / 2];
   this.angle = Math.PI;
-  this.radius = 30;
+  this.radius = 20;
   this.speed = 0;
   this.color = "blue";
   this.game_id = game_id;
