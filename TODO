@@ -5,15 +5,8 @@ TODO
 -- clean up old games (i.e. when player leaves)
 
 -- add on canvas: Time, Your Score (with color), Opponent's Score
-
--- check for ship collisions
--- check for ship/bullet collisions
--- change spawn point for ship
--- create score for current player
--- change win message to show winning player's name
--- two types of records (single/multiplayer)
+-- move asteroid logic to server for multiplayer? (hopefully not)
 
 -- splash screen: allow players to hit "enter" to set name
-
 
 -- what happens when one player leaves?

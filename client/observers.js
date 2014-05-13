@@ -30,7 +30,7 @@ observeGames = function(player_id) {
           _.each(handles, function(handle) {
             handle.stop();
           })
-          drawWinMessage(score, ctx);
+          drawWinMessage(player_id, ctx);
         };
         
         if (!game) {
@@ -42,6 +42,78 @@ observeGames = function(player_id) {
       }, 30);
     }
   });
+  
+  //customize for multiplayer games
+  
+  Games.find({
+    player1_id: player_id,
+    player2_id: "pending",
+    type: "multi"
+  }).observeChanges({
+    added: function(game_id) {
+      var canvas = document.getElementsByTagName("canvas")[0];
+      if (canvas) {
+        var ctx = canvas.getContext("2d");
+        drawWaitingMessage(ctx);
+      }
+    }
+  });
+  
+  Games.find({
+    $or: [{player1_id: player_id, player2_id: {$ne: "pending"}},
+          {player2_id: player_id}],
+    type: "multi"
+  }).observeChanges({
+    added: function(game_id) {
+      var handles = setObservers(player_id, game_id);
+
+      var ship = new Ship(player_id, game_id);
+      LocalShips.insert(ship);
+
+      var interval = Meteor.setInterval(function() {
+        var game = Games.findOne(game_id);
+        
+        moveObjects(player_id, game_id);
+        
+        var canvas = document.getElementsByTagName("canvas")[0];
+        if (canvas && game) {
+          var ctx = canvas.getContext("2d");
+          draw(ctx, player_id, game_id);
+        }
+        // fix game.clock > 1
+        if (game  && (game.clock > 1) && 
+                Asteroids.find({game_id: game_id}).count() === 0) {
+          Meteor.clearInterval(interval);
+          var score = Games.findOne(game_id).clock
+          var ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
+          Players.update(Session.get("player_id"),
+              {$set: {current_score: score}});
+          setWinner(game);
+          Games.remove(game_id);
+          _.each(handles, function(handle) {
+            handle.stop();
+          })
+          drawMultiWinMessage(player_id, ctx);
+        };
+        
+        if (!game) {
+          Meteor.clearInterval(interval);
+          _.each(handles, function(handle) {
+            handle.stop();
+          })
+        }
+      }, 30);
+    }
+  });
+};
+
+var setWinner = function(game) {
+  var player1 = Players.findOne(game.player1_id);
+  var player2 = Players.findOne(game.player2._id);
+  
+  if (player1.score >= player2.score) {
+    Players.update(player1._id, {$set: {winner: true}});
+  }
 };
 
 var setObservers = function(player_id, game_id) {

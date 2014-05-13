@@ -86,7 +86,7 @@ Ship = function(player_id, game_id) {
   this.angle = Math.PI;
   this.radius = 25;
   this.speed = 0;
-  this.color = "blue";
+  this.color = Ship.color(player_id, game_id);
   this.game_id = game_id;
   this.player_id = player_id;
 };
@@ -102,3 +102,13 @@ Ship.spawnSpot = function(player_id) {
     return [Game.DIM_X / 2, Game.DIM_X / 2];
   }
 }
+
+Ship.color = function(player_id, game_id) {
+  var game = Games.findOne(game_id);
+  
+  if (game.type === "single" || game.player1_id === player._id) {
+    return "blue"
+  } else {
+    return "red"
+  }
+};

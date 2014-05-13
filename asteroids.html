@@ -6,10 +6,14 @@
   <h1>
     Asteroids!
   </h1>
-    
-  {{> lobby }}
+  
+  {{> mainLobby }}
+  {{> singleLobby }}
+  {{> singleLeaderboard }}
+  {{> multiLobby }}
+  {{> multiLeaderboard }}
+  {{> existingGames }}
   {{> gamePlay }}
-  {{> leaderboard }}
 
   <footer>
     <h3>
@@ -21,14 +25,14 @@
   </footer>
 </body>
 
-<template name="lobby">
+<template name="mainLobby">
   {{#if show}}
     {{#if username}}
-      <div class="button new-game">
-        New Game
+      <div class="button single-player">
+        Single Player
       </div>
-      <div class="button leaderboard">
-        Leaderboard
+      <div class="button multiplayer">
+        Multiplayer
       </div>
     {{else}}
       <div class="name">
@@ -44,25 +48,92 @@
   {{/if}}
 </template>
 
-<template name="gamePlay">
+<template name="singleLobby">
   {{#if show}}
-    <canvas height="600" width="600"></canvas>
-    <div class="button lobby">
-      Leave Game
+    <h2>Single Player</h2>
+    <div class="button new-game">
+      New Game
+    </div>
+    <div class="button leaderboard">
+      Leaderboard
+    </div>
+    <div class="button back">
+      Back
     </div>
   {{/if}}
 </template>
 
-<template name="leaderboard">
+<template name="singleLeaderboard">
   {{#if show}}
-    <h2>LeaderBoard</h2>
+    <h2>Single Player Leaderboard</h2>
     <ol class="leaderboard">
       {{#each records}}
         <li>{{username}} ({{time}} seconds)</li>
       {{/each}}
     </ol>
+    <div class="button back">
+      Back
+    </div>
+  {{/if}}
+</template>
+
+<template name="multiLobby">
+  {{#if show}}
+    <h2>Multiplayer</h2>
+    <div class="button new-game">
+      New Game
+    </div>
+    <div class="button existing-games">
+      Existing Games
+    </div>
+    <div class="button leaderboard">
+      Leaderboard
+    </div>
+    <div class="button back">
+      Back
+    </div>
+  {{/if}}
+</template>
+
+<template name="existingGames">
+  {{#if show}}
+    <h2>Existing Games</h2>
+    {{#if gamesExist}}
+      <ul class="existing-games">
+        {{#each games}}
+          <li class="join-game" id="{{_id}}">Play against {{opponent}}!</li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <h3 class="no-games">
+        Sorry, there aren't any available games currently.  Start a new one!
+      </h3>
+    {{/if}}
+    <div class="button back">
+      Back
+    </div>
+  {{/if}}
+</template>
+
+<template name="multiLeaderboard">
+  {{#if show}}
+    <h2>Multiplayer Leaderboard</h2>
+    <ol class="leaderboard">
+      {{#each records}}
+        <li>{{username}} ({{time}} seconds, opponent: {{opponent}})</li>
+      {{/each}}
+    </ol>
+    <div class="button back">
+      Back
+    </div>
+  {{/if}}
+</template>
+
+<template name="gamePlay">
+  {{#if show}}
+    <canvas height="600" width="600"></canvas>
     <div class="button lobby">
-      Return to Lobby
+      Leave Game
     </div>
   {{/if}}
 </template>

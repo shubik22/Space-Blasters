@@ -1,7 +1,7 @@
 Meteor.startup(function() {
   var player_id = Players.insert({username: ""});
   Session.set('player_id', player_id);
-  Session.setDefault('page', 'lobby');
+  Session.setDefault('page', 'mainLobby');
   Meteor.subscribe('players');
   Meteor.subscribe('records');
   Meteor.subscribe('games');

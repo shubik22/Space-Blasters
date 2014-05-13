@@ -33,7 +33,18 @@ draw = function(ctx, player_id, game_id) {
   }
 };
 
-drawWinMessage = function(score, ctx) {
+drawWaitingMessage = function(ctx) {
+  ctx.clearRect(0, 0, 600, 600);
+
+  ctx.fillStyle = "red";
+  ctx.font = "18pt Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("Waiting for an opponent...", 300, 250);
+};
+
+drawWinMessage = function(player_id, ctx) {
+  var player = Players.findOne(player_id);
+  
   ctx.clearRect(0, 0, 600, 600);
   
   var rectX = 100;
@@ -51,11 +62,14 @@ drawWinMessage = function(score, ctx) {
       rectWidth - cornerRadius, rectHeight - cornerRadius);
   ctx.fillRect(rectX + (cornerRadius/2), rectY + (cornerRadius/2),
       rectWidth - cornerRadius, rectHeight - cornerRadius);
-  
   ctx.fillStyle = "red";
   ctx.font = "20pt Arial";
   ctx.textAlign = "center";
-  ctx.fillText("You win! Score: " + Math.round(score), 300, 250);
+  if (player.winner) {
+    ctx.fillText("You win! Score: " + Math.round(player.current_score), 300, 250);    
+  } else {
+    ctx.fillText("You lost! Score: " + Math.round(player.current_score), 300, 250);    
+  }
   ctx.font = "16pt Arial"
   ctx.fillText('Click on "Leave Game" to return home.', 300, 280);
 };

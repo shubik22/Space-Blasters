@@ -32,7 +32,8 @@ h2 {
 h3 {
   color: white;
   text-align: center;
-  font-size: 14px;
+  font-size: 20px;
+  margin-bottom: 20px;
 }
 
 a {
@@ -84,6 +85,12 @@ strong {
   box-shadow: 0px 0px 0.5px 0.5px #414141;
 }
 
+.button.back {
+  width: 100px;
+  padding: 5px;
+  font-size: 16px;
+}
+
 .name {
   text-align: center;
   color: white;
@@ -92,10 +99,6 @@ strong {
 .name .button {
   padding: 5px 10px;
   font-size: 18px;
-}
-
-.new-game {
-  margin-top: 50px;
 }
 
 .name > .name-text {
@@ -122,7 +125,11 @@ strong {
   list-style-position: inside;
 }
 
-.leaderboard > li {
+.existing-games {
+  list-style: none;
+}
+
+.leaderboard > li, .existing-games > li {
   width: 200px;
   background: #E0080D;
   margin: auto;
@@ -136,12 +143,18 @@ strong {
   padding: 6px;
 }
 
-.leaderboard > li:last-of-type {
+.leaderboard > li:last-of-type, 
+.existing-games > li:last-of-type {
   margin-bottom: 30px;
 }
 
-.leaderboard > li:hover {
+.leaderboard > li:hover,
+.existing-games > li:hover {
   background: #ED6F43;
+}
+
+.existing-games > li:hover {
+  cursor: pointer;
 }
 
 .instructions {
@@ -174,6 +187,7 @@ footer {
 }
 
 footer > h3 {
+  margin-bottom: 0;
   font-size: 12px;
   text-align: right;
 }

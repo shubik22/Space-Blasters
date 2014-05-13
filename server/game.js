@@ -19,6 +19,7 @@ Meteor.methods({
       var game_id = Games.insert({
         clock: 0,
         player1_id: player_id,
+        player2_id: "pending",
         type: type
       });
       Players.update(player_id, {$set: {position: "first"}});
