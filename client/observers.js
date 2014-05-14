@@ -17,16 +17,24 @@ observeGames = function(player_id) {
           draw(ctx, player_id, game_id);
         }
         // fix game.clock > 1
-        if (game  && (game.clock > 1) && 
+        if (game  && (game.clock > 5) && 
                 Asteroids.find({game_id: game_id}).count() === 0) {
           Meteor.clearInterval(interval);
+          var player = Players.findOne(Session.get("player_id"));
           var score = Games.findOne(game_id).clock
 
           var ctx = canvas.getContext("2d");
           Players.update(
-            Session.get("player_id"),
+            player._id,
             {$set: {score: score, winner: true}}
           );
+          
+          Records.insert({
+            type: "single",
+            username: player.username,
+            score: score
+          });
+          
           Games.remove(game_id);
           _.each(handles, function(handle) {
             handle.stop();
@@ -83,10 +91,13 @@ observeGames = function(player_id) {
         if (game  && (game.clock > 1) && 
                 Asteroids.find({game_id: game_id}).count() === 0) {
           Meteor.clearInterval(interval);
-          var score = Games.findOne(game_id).clock
+          var player = Players.findOne(Session.get("player_id"));
+          var score = Games.findOne(game_id).clock;
           var ctx = canvas.getContext("2d");
-          Players.update(Session.get("player_id"),
+          
+          Players.update(player._id,
               {$set: {current_score: score}});
+            
           Games.remove(game_id);
           _.each(handles, function(handle) {
             handle.stop();

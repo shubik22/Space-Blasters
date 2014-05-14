@@ -182,8 +182,20 @@ var setWinner = function(game_id) {
 
   if (player1.score >= player2.score) {
     Players.update(player1._id, {$set: {winner: true}});
+    Records.insert({
+      type: "multi",
+      username: player1.username,
+      opponent: player2.username,
+      score: player1.score
+    });
   }
   if (player2.score >= player2.score) {
     Players.update(player2._id, {$set: {winner: true}});
+    Records.insert({
+      type: "multi",
+      username: player2.username,
+      opponent: player1.username,
+      score: player2.score
+    });
   }
 };

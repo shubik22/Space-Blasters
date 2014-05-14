@@ -49,15 +49,6 @@ Meteor.methods({
       
         if (Asteroids.find({game_id: game_id}).count() === 0) {
           Meteor.clearInterval(interval);
-        
-          var player = Players.findOne(player_id);
-          if (player.winner) {
-            Records.insert({
-              type: "single",
-              username: player.username,
-              score: clock
-            });
-          }
         }
       }, 30);
     };
@@ -86,23 +77,6 @@ Meteor.methods({
   
       if (Asteroids.find({game_id: game_id}).count() === 0) {
         Meteor.clearInterval(interval);
-
-        var player2 = Players.findOne(player_id);
-        if (player2.winner) {
-          Records.insert({
-            type: "multi",
-            username: player2.username,
-            opponent: player1.username,
-            score: player2.score
-          });
-        } else if (player1.winner) {
-          Records.insert({
-            type: "multi",
-            username: player1.username,
-            opponent: player2.username,
-            score: player1.score
-          });
-        }
       }
     }, 30);
   },
