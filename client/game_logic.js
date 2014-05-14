@@ -16,54 +16,66 @@ var moveAsteroids = function(game_id) {
 
 var moveBullets = function(player_id, game_id) {
   LocalBullets.find({game_id: game_id}).forEach(function(bullet) {
-    checkBulletAsteroid(bullet, player_id, game_id);
+    if (bullet.player_id === player_id) {
+      checkBulletAsteroids(bullet, player_id, game_id);
+    }
     if (LocalBullets.find(bullet._id)) moveBullet(bullet);
   });
 };
 
-var checkBulletAsteroid = function(bullet, player_id, game_id) {
+var checkBulletAsteroids = function(bullet, player_id, game_id) {
   LocalAsteroids.find({game_id: game_id}).forEach(function(asteroid) {
-    if (bullet.player_id === player_id && checkCollision(bullet, asteroid)) {
+    if (checkCollision(bullet, asteroid)) {
       LocalAsteroids.remove(asteroid._id);
       Asteroids.remove(asteroid.server_id);
       LocalBullets.remove(bullet._id);
-      Players.update(player_id, {$inc: {hits: 1}})
+      Players.update(player_id, {$inc: {score: 1}})
+      if (LocalAsteroids.find().count() === 0
+          && Games.findOne(game_id).type === "multi") {
+        setWinner(game_id);
+      }
     }
   })
 };
 
 var moveShips = function(player_id, game_id) {
   LocalShips.find({game_id: game_id}).forEach(function(ship) {
-    checkShipAsteroid(ship, player_id, game_id);
-    checkShipBullet(ship, player_id, game_id);
-    checkShipShip(ship, player_id, game_id);
-    if (LocalShips.find(ship._id)) moveShip(ship);
+    if (ship.player_id === player_id) {
+      checkShipAsteroids(ship, player_id, game_id);
+      checkShipBullets(ship, player_id, game_id);
+      checkShipShips(ship, player_id, game_id);      
+    }
+    if (LocalShips.findOne(ship._id)) moveShip(ship);
   });
 };
 
-var checkShipAsteroid = function(ship, player_id, game_id) {
+var checkShipAsteroids = function(ship, player_id, game_id) {
   LocalAsteroids.find({game_id: game_id}).forEach(function(asteroid) {
     if (checkCollision(ship, asteroid)) resetShip(player_id, game_id);
+  });
+};
+
+var checkShipBullets = function(ship, player_id, game_id) {
+  LocalBullets.find({
+    game_id: game_id,
+    player_id: {$ne: player_id}
+  }).forEach(function(bullet) {
+    if (checkCollision(ship, bullet)) {
+      Players.update(bullet.player_id, {$inc: {score: 1}});
+      LocalBullets.remove(bullet._id);
+      resetShip(player_id, game_id);
+    }
   })
 };
 
-var checkShipBullet = function(ship, player_id, game_id) {
-  LocalBullets.find({game_id: game_id}).forEach(function(bullet) {
-    if (ship.player_id === player_id && bullet.player_id != player_id) {
-      if (checkCollision(ship, bullet)) resetShip(player_id, game_id);
-    }
-    if (bullet.player_id === player_id && ship.player_id != player_id) {
-      if (checkCollision(ship, bullet)) LocalBullets.remove(bullet._id);
-    }
-  })
-};
-
-var checkShipShip = function(ship1, player_id, game_id) {
+var checkShipShips = function(ship1, player_id, game_id) {
   LocalShips.find({
     game_id: game_id,
     player_id: {$ne: player_id}
   }).forEach(function(ship2) {
-    if (checkCollision(ship1, ship2)) resetShip(player_id, game_id);
+    if (checkCollision(ship1, ship2)) {
+      resetShip(player_id, game_id);
+    }
   })
 };
 
@@ -112,7 +124,7 @@ var resetShip = function(player_id, game_id) {
 
   LocalShips.remove(ship_id);
   respawnShip(player_id, game_id);
-}
+};
 
 var respawnShip = function(player_id, game_id) {
   var interval = Meteor.setInterval(function() {
@@ -131,15 +143,14 @@ var respawnShip = function(player_id, game_id) {
 var clearForRespawn = function(game_id) {
   var asteroids = LocalAsteroids.find({game_id: game_id}).fetch();
   var bullets = LocalBullets.find({game_id: game_id}).fetch();
-  var ships = LocalShips.find({game_id: game_id}).fetch();
 
-  var objects = asteroids.concat(bullets).concat(ships);
+  var objects = asteroids.concat(bullets);
 
   return _.every(objects, function(object) {
     var xDiff = object.pos[0] - Game.DIM_X/2;
     var yDiff = object.pos[1] - Game.DIM_Y/2;
     var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
-    return (distance > (100 + object.radius));
+    return (distance > (60 + object.radius));
   });
 };
 
@@ -162,4 +173,17 @@ var enforceBoundary = function(pos) {
 var removeBullet = function(pos) {
    return (pos[0] > Game.DIM_X) ||(pos[0] < 0) ||
           (pos[1] > Game.DIM_Y) || (pos[1] < 0);
+};
+
+var setWinner = function(game_id) {
+  var game = Games.findOne(game_id);
+  var player1 = Players.findOne(game.player1_id);
+  var player2 = Players.findOne(game.player2_id);
+
+  if (player1.score >= player2.score) {
+    Players.update(player1._id, {$set: {winner: true}});
+  }
+  if (player2.score >= player2.score) {
+    Players.update(player2._id, {$set: {winner: true}});
+  }
 };

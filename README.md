@@ -1,0 +1,3 @@
+# Space Blasters
+
+[Space Blasters](http://spaceblasters.meteor.com) is a version of the classic arcade game Asteroids written in JavaScript and built with [Meteor](http://www.meteor.com).  It has both single and multiplayer modes and corresponding leaderboards.  Space Blasters was written to take advantage of Meteor's built-in realtime updating while still minimizing the amount of data sent back and forth between the client and the server.

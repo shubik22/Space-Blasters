@@ -2,10 +2,4 @@ TODO
 
 -- namespace game logic properly
 -- add in global constants for game
--- clean up old games (i.e. when player leaves)
-
--- move asteroid logic to server for multiplayer? (hopefully not)
-
 -- splash screen: allow players to hit "enter" to set name
-
--- what happens when one player leaves?

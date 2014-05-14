@@ -21,10 +21,11 @@ observeGames = function(player_id) {
                 Asteroids.find({game_id: game_id}).count() === 0) {
           Meteor.clearInterval(interval);
           var score = Games.findOne(game_id).clock
-          var ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
+
+          var ctx = canvas.getContext("2d");
           Players.update(
             Session.get("player_id"),
-            {$set: {current_score: score, winner: true}}
+            {$set: {score: score, winner: true}}
           );
           Games.remove(game_id);
           _.each(handles, function(handle) {
@@ -42,8 +43,6 @@ observeGames = function(player_id) {
       }, 30);
     }
   });
-  
-  //customize for multiplayer games
   
   Games.find({
     player1_id: player_id,
@@ -85,10 +84,9 @@ observeGames = function(player_id) {
                 Asteroids.find({game_id: game_id}).count() === 0) {
           Meteor.clearInterval(interval);
           var score = Games.findOne(game_id).clock
-          var ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
+          var ctx = canvas.getContext("2d");
           Players.update(Session.get("player_id"),
               {$set: {current_score: score}});
-          setWinner(game);
           Games.remove(game_id);
           _.each(handles, function(handle) {
             handle.stop();
@@ -97,6 +95,8 @@ observeGames = function(player_id) {
         };
         
         if (!game) {
+          if (canvas) drawWinMessage(player_id, canvas.getContext("2d"));
+          
           Meteor.clearInterval(interval);
           _.each(handles, function(handle) {
             handle.stop();
@@ -105,15 +105,6 @@ observeGames = function(player_id) {
       }, 30);
     }
   });
-};
-
-var setWinner = function(game) {
-  var player1 = Players.findOne(game.player1_id);
-  var player2 = Players.findOne(game.player2_id);
-  
-  if (player1.score >= player2.score) {
-    Players.update(player1._id, {$set: {winner: true}});
-  }
 };
 
 var setObservers = function(player_id, game_id) {
@@ -133,19 +124,16 @@ var observeShips = function(player_id, game_id) {
     player_id: {$ne: player_id}
   }).observeChanges({
     added: function(id, fields) {
-      console.log("Ship added", id);
       fields.server_id = id;
       LocalShips.insert(fields);
     },
     
     changed: function(id, fields) {
-      console.log("Ship changed", id)
       var ship = LocalShips.findOne({server_id: id});
       LocalShips.update(ship._id, {$set: fields});
     },
     
     removed: function(id) {
-      console.log("Ship removed", id)
       var ship = LocalShips.findOne({server_id: id});
       LocalShips.remove(ship._id);
     }
@@ -160,21 +148,18 @@ var observeLocalShips = function(player_id, game_id) {
       game_id: game_id
   }).observeChanges({
     added: function(id, fields) {
-      console.log("LocalShip added", id)
       addKeybindings(id, player_id, game_id);
       fields.client_id = id;
       Ships.insert(fields);
     },
 
     changed: function(id, fields) {
-      console.log("LocalShip changed", id)
       var ship = Ships.findOne({client_id: id});
       Ships.update(ship._id, {$set: fields});
     },
 
     removed: function(id) {
       removeKeybindings();
-      console.log("LocalShip removed", id)
       var ship = Ships.findOne({client_id: id});
       Ships.remove(ship._id);
     }
@@ -186,13 +171,11 @@ var observeLocalShips = function(player_id, game_id) {
 var observeAsteroids = function(game_id) {
   var handle = Asteroids.find({game_id: game_id}).observeChanges({
     added: function(id, fields) {
-      // console.log("Asteroid added");
       fields.server_id = id;
       LocalAsteroids.insert(fields);
     },
     
     removed: function(id, fields) {
-      // console.log("Asteroid removed")
       var asteroid = LocalAsteroids.findOne({server_id: id});
       if (asteroid) LocalAsteroids.remove(asteroid._id);
     }
@@ -202,15 +185,15 @@ var observeAsteroids = function(game_id) {
 };
 
 var observeBullets = function(player_id, game_id) {
-  var handle = Bullets.find({game_id: game_id, player_id: {$ne: player_id}}).observeChanges({
+  var handle = Bullets.find({game_id: game_id}).observeChanges({
     added: function(id, fields) {
-      // console.log("Bullet added");
-      fields.server_id = id;
-      LocalBullets.insert(fields);
+      if (fields.player_id != player_id) {
+        fields.server_id = id;
+        LocalBullets.insert(fields);        
+      }
     },
 
     removed: function(id) {
-      // console.log("Bullet removed")
       var bullet = LocalBullets.findOne({server_id: id});
       if (bullet) LocalBullets.remove(bullet._id);
     }
@@ -222,13 +205,11 @@ var observeBullets = function(player_id, game_id) {
 var observeLocalBullets = function(player_id, game_id) {
   var handle = LocalBullets.find({player_id: player_id, game_id: game_id}).observeChanges({
     added: function(id, fields) {
-      // console.log("LocalBullet added");
       fields.client_id = id;
       Bullets.insert(fields);
     },
 
     removed: function(id) {
-      // console.log("LocalBullet removed")
       var bullet = Bullets.findOne({client_id: id});
       if (bullet) Bullets.remove(bullet._id);
     }
@@ -246,10 +227,10 @@ var addKeybindings = function(id, player_id, game_id) {
       return {angle: (ship.angle - (Math.PI / 15))};
     },
     'up': function(ship) {
-      return {speed: (ship.speed + 1), accelerating: true};
+      return {speed: (Math.min(ship.speed + 1, 10)), accelerating: true};
     },
     'down': function(ship) {
-      return {speed: (ship.speed - 1), accelerating: false};
+      return {speed: (Math.max(ship.speed - 1, -10)), accelerating: false};
     }
   }
 

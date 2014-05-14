@@ -1,5 +1,14 @@
+Meteor.startup(function() {
+  Players.find().forEach(function(player) {
+    if (player.last_update - Date.now() > 10000) {
+      Players.remove(player._id);
+      if (player.game_id) Games.remove(player.game_id)
+    }
+  });
+});
+
 var createAsteroids = function(game_id) {
-  for (var i = 0; i < 2; i++) {
+  for (var i = 0; i < 10; i++) {
     var asteroid = Asteroid.randomAsteroid(game_id);
     Asteroids.insert(asteroid);
   }
@@ -27,7 +36,8 @@ Meteor.methods({
     Players.update(player_id, {$set: {
       game_id: game_id,
       game_type: type,
-      hits: 0,
+      color: 'blue',
+      score: 0,
       winner: false}});
     var clock = 0;
     
@@ -45,7 +55,7 @@ Meteor.methods({
             Records.insert({
               type: "single",
               username: player.username,
-              time: clock
+              score: clock
             });
           }
         }
@@ -60,7 +70,8 @@ Meteor.methods({
       game_id: game_id,
       game_type: "multi",
       position: "second",
-      hits: 0,
+      color: 'red',
+      score: 0,
       winner: false}});
     Games.update(game_id, {$set: {
       player2_id: player_id
@@ -82,14 +93,14 @@ Meteor.methods({
             type: "multi",
             username: player2.username,
             opponent: player1.username,
-            time: clock
+            score: player2.score
           });
         } else if (player1.winner) {
           Records.insert({
             type: "multi",
             username: player1.username,
             opponent: player2.username,
-            time: clock
+            score: player1.score
           });
         }
       }
@@ -106,7 +117,7 @@ Meteor.methods({
     if (Games.findOne(game_id)) {
       Players.update(player_id, {$set: {game_id: null}});
       Games.remove(game_id);
-      Ships.remove(ship._id);
+      if (ship) Ships.remove(ship._id);
       asteroids.forEach(function(asteriod) {
         Asteroids.remove(asteriod._id);
       });

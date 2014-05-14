@@ -28,11 +28,11 @@ Template.singleLeaderboard.show = function() {
 };
 
 Template.singleLeaderboard.records = function() {
-  return Records.find({type: "single"}, {sort: {time: 1}});
+  return Records.find({type: "single"}, {sort: {score: 1}, limit: 10});
 }
 
-Template.singleLeaderboard.time = function() {
-  return Math.round(this.time);
+Template.singleLeaderboard.score = function() {
+  return Math.round(this.score);
 }
 
 Template.singleLeaderboard.events({

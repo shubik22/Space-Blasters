@@ -6,12 +6,20 @@ html, body, h1, h2, h3, div, canvas, ul, ol, li strong {
   font-family: sans-serif;
 }
 
+body {
+  background: black;
+}
+
 ul {
   list-style: none;
 }
 
 a {
   text-decoration: none;
+}
+
+strong {
+  font-weight: bold;
 }
 
 h1 {
@@ -36,12 +44,39 @@ h3 {
   margin-bottom: 20px;
 }
 
-a {
-  color: green;
+.nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-top: 20px;
+  margin-right: 20px;
 }
 
-a:hover {
-  color: #34C504;
+.red {
+  color: red;
+}
+
+.blue {
+  color: blue;
+}
+
+.nav > li {
+  font-size: 14px;
+  float: left;
+  margin-left: 15px;
+}
+
+a, .nav > li.link {
+  color: #20A818;
+  cursor: pointer;
+}
+
+a:hover, .nav > li.link:hover {
+  color: #34D000;
+}
+
+.nav > li.name {
+  color: white;
 }
 
 .hidden {
@@ -52,17 +87,18 @@ canvas {
   background: url("hubble.jpg");
   background-size: cover;
   display: block;
-  margin: 20px auto;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 16px;
   border: 3px solid gray;
   border-radius: 3px;
 }
 
-body {
-  background: black;
-}
-
-strong {
-  font-weight: bold;
+.game-info {
+  font-size: 16px;
+  text-align: center;
+  color: white;
+  margin-bottom: 15px;
 }
 
 .button {
@@ -157,27 +193,6 @@ strong {
   cursor: pointer;
 }
 
-.instructions {
-  background: white;
-  border: 2px solid grey;
-  border-radius: 8px;
-  width: 240px;
-  margin-bottom: 40px;
-  padding: 10px;
-  text-align: center;
-  margin: auto;
-  margin-bottom: 30px;
-}
-
-.instructions > h2 {
-  font-size: 20px;
-  padding-bottom: 5px;
-}
-
-.instructions > table {
-  margin: auto;
-}
-
 footer {
   position: fixed;
   bottom: 0;
@@ -190,4 +205,72 @@ footer > h3 {
   margin-bottom: 0;
   font-size: 12px;
   text-align: right;
+}
+
+.modal-content {
+  position: absolute;
+  left: 50%;
+
+  margin-left: -218px;
+
+  width: 400px;
+  min-height: 100px;
+  padding: 18px;
+  z-index: 1000;
+
+  background: white;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.25);
+}
+
+.modal-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  
+  background: url('stars.jpg') no-repeat;
+  background-size: 100%;
+  opacity: 0.5;
+  z-index: 999;
+}
+
+.how-to-play > h2 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 30px;
+  color: black;
+}
+
+.how-to-play > h3, .info > h3 {
+  color: black;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.how-to-play > h3:first-of-type, .info > h3:first-of-type {
+  margin-top: 0;
+}
+
+.directions, .info {
+  font-size: 16px;
+  color: black;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.how-to-play > div, .info > div {
+  margin: 10px 0;
+}
+
+.how-to-play > table {
+  margin: auto;
+  color: black;
+  text-align: center;
+}
+
+.spacebar {
+  text-align: center;
 }

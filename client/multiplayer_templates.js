@@ -66,11 +66,11 @@ Template.multiLeaderboard.show = function() {
 };
 
 Template.multiLeaderboard.records = function() {
-  return Records.find({type: "multi"}, {sort: {time: 1}});
+  return Records.find({type: "multi"}, {sort: {score: -1}, limit: 10});
 };
 
-Template.multiLeaderboard.time = function() {
-  return Math.round(this.time);
+Template.multiLeaderboard.score = function() {
+  return Math.round(this.score);
 };
 
 Template.multiLeaderboard.events({

@@ -78,7 +78,6 @@ Asteroid.randomVel = function() {
   return [dirX * speedX, dirY * speedY];
 };
 
-
 // SHIP
 
 Ship = function(player_id, game_id) {

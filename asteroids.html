@@ -1,13 +1,14 @@
 <head>
-  <title>Asteroids!</title>
+  <title>Space Blasters!</title>
 </head>
 
 <body>
   <h1>
-    Asteroids!
+    Space Blasters!
   </h1>
   
   {{> mainLobby }}
+  {{> modals}}
   {{> singleLobby }}
   {{> singleLeaderboard }}
   {{> multiLobby }}
@@ -20,7 +21,7 @@
       Created by <a href="https://www.linkedin.com/in/samsweeney">Sam Sweeney</a>
     </h3>
     <h3>
-     View source <a href="https://github.com/shubik22/Meteor-Asteroids">here</a>
+     View source code <a href="https://github.com/shubik22/Space-Blasters">here</a>
     </h3>
   </footer>
 </body>
@@ -49,6 +50,70 @@
   {{/if}}
 </template>
 
+<template name="modals">
+  <ul class="nav">
+    {{#if username}}
+    <li class="name">
+      Playing as {{username}}
+    </li>
+    {{/if}}
+    <li class="link instructions">
+      How to Play
+    </li>
+    <li class="link about">
+      About
+    </li>
+  </ul>
+  <div class="modal about hidden">
+    <div class="modal-screen"></div>
+    <div class="modal-content info">
+      <h3>About Space Blasters</h3>
+      <div>
+        Space Blasters is a take on the classic arcade game Asteroids.  It was built with <a href="https://www.meteor.com/">Meteor</a> by <a href="https://www.linkedin.com/in/samsweeney">Sam Sweeney</a>.
+      </div>
+      <div>
+        You can check out the source code on Github <a href="https://github.com/shubik22/Space-Blasters">here</a> (if you're into that kind of thing...) or contact me <a href="mailto:sam.s.sweeney@gmail.com">here</a>.
+      </div>
+    </div>
+  </div>
+  <div class="modal instructions hidden">
+    <div class="modal-screen"></div>
+    <div class="modal-content how-to-play">
+      <h3>Objective</h3>
+      <div>Shoot the asteroids!  As fast as you can!</div>
+      <h3>Scoring</h3>
+      <div>
+        <strong>Single Player:</strong> Your score will be the amount of time it takes you to clear all of the asteroids.
+      </div>
+      <div>
+        <strong>Multiplayer:</strong> Your score will be the number of asteroids you hit plus the number of times you hit your opponent minus the number of times your opponent hits you.
+      </div>
+      <h3>Controls</h3>
+      <table>
+        <tr>
+          <td>
+            <strong>&#8592;</strong>: Rotate left
+          </td>
+          <td>
+            <strong>&#8594;</strong>: Rotate right
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>&#8593;</strong>: Accelerate
+          </td>
+          <td>
+            <strong>&#8595;</strong>: Decelerate
+          </td>
+        </tr>
+      </table>
+      <div class="spacebar">
+        <strong>Spacebar</strong>: Shoot
+      </div>
+    </div>
+  </div>
+</template>
+
 <template name="singleLobby">
   {{#if show}}
     <h2>Single Player</h2>
@@ -69,7 +134,7 @@
     <h2>Single Player Leaderboard</h2>
     <ol class="leaderboard">
       {{#each records}}
-        <li>{{username}} ({{time}} seconds)</li>
+        <li>{{username}} (score: {{score}})</li>
       {{/each}}
     </ol>
     <div class="button back">
@@ -102,7 +167,7 @@
     {{#if gamesExist}}
       <ul class="existing-games">
         {{#each games}}
-          <li class="join-game" id="{{_id}}">Play against {{opponent}}!</li>
+          <li class="join-game" id="{{_id}}">Play against {{opponent}}</li>
         {{/each}}
       </ul>
     {{else}}
@@ -121,7 +186,7 @@
     <h2>Multiplayer Leaderboard</h2>
     <ol class="leaderboard">
       {{#each records}}
-        <li>{{username}} ({{time}} seconds, opponent: {{opponent}})</li>
+        <li>{{username}} (score: {{score}}, opponent: {{opponent}})</li>
       {{/each}}
     </ol>
     <div class="button back">
@@ -133,33 +198,14 @@
 <template name="gamePlay">
   {{#if show}}
     <canvas height="600" width="600"></canvas>
+    {{#if opponent}}
+      <div class="game-info">
+        <div>You are playing against {{opponent.username}}.</div>
+        <div>Your ship is <span class="{{color}}">{{color}}</span>.</div>
+      </div>
+    {{/if}}
     <div class="button lobby">
       Leave Game
     </div>
   {{/if}}
-</template>
-
-<template name="instructions">
-  <div class="instructions">
-    <h2>How to Play</h2>
-    <table>
-      <tr>
-        <td>
-          <strong>&#8592;</strong>: Rotate left
-        </td>
-        <td>
-          <strong>&#8594;</strong>: Rotate right
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <strong>&#8593;</strong>: Accelerate
-        </td>
-        <td>
-          <strong>&#8595;</strong>: Decelerate
-        </td>
-      </tr>
-    </table>
-    <strong>Spacebar</strong>: Shoot bullet
-  </div>
 </template>

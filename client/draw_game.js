@@ -16,25 +16,24 @@ draw = function(ctx, player_id, game_id) {
   
   var game = Games.findOne(game_id);
   var player = Players.findOne(player_id);
-  var hits = player.hits;
   
   if (game.type === "multi" && game.player1_id === player_id) {
-    var opponentHits = Players.findOne(game.player2_id).hits;
+    var opponent = Players.findOne(game.player2_id);
   } else if (game.type === "multi" && game.player2_id === player_id) {
-    var opponentHits = Players.findOne(game.player1_id).hits;
+    var opponent = Players.findOne(game.player1_id);
   } else {
-    var opponentHits = "none";
+    var opponent = "none";
   }
   
-  drawTime(ctx, game.clock, hits, opponentHits);
-  
-  var ship = LocalShips.find({player_id: player_id, game_id: game_id});
+  drawTime(ctx, game.clock, player, opponent);
+
+  var ship = LocalShips.findOne({player_id: player_id, game_id: game_id});
   
   if (!ship) {
     ctx.fillStyle = "red";
     ctx.font = "20pt Arial";
     ctx.textAlign = "center";
-    ctx.fillText("Waiting to Respawn", 300, 300);
+    ctx.fillText("Waiting for Space to Respawn", 300, 300);
   }
 };
 
@@ -70,10 +69,14 @@ drawWinMessage = function(player_id, ctx) {
   ctx.fillStyle = "red";
   ctx.font = "20pt Arial";
   ctx.textAlign = "center";
+  
+  
   if (player.winner) {
-    ctx.fillText("You win! Score: " + Math.round(player.current_score), 300, 250);    
+    ctx.fillText("You won! Score: " + Math.round(player.score),
+      300, 250);    
   } else {
-    ctx.fillText("You lost! Score: " + Math.round(player.current_score), 300, 250);    
+    ctx.fillText("You lost! Score: " + Math.round(player.score),
+      300, 250);    
   }
   ctx.font = "16pt Arial"
   ctx.fillText('Click on "Leave Game" to return home.', 300, 280);
@@ -127,13 +130,15 @@ var drawShip = function(ship, ctx) {
   ctx.fill();
 };
 
-var drawTime = function(ctx, clock, hits, opponentHits) {
+var drawTime = function(ctx, clock, player, opponent) {
   ctx.fillStyle = "#DE2BC6";
   ctx.font = "12pt Arial";
   ctx.textAlign = "left";
   ctx.fillText("Time: " + Math.round(clock), 10, 20);
-  ctx.fillText("Asteroids Hit: " + hits, 10, 40);
-  if (opponentHits >= 0) {
-    ctx.fillText("Opponent Hits: " + opponentHits, 10, 60);
+  ctx.fillStyle = player.color
+  ctx.fillText("Your Score: " + player.score, 10, 40);
+  if (opponent != "none") {
+    ctx.fillStyle = opponent.color
+    ctx.fillText("Opponent's Score: " + opponent.score, 10, 60);
   }
 };
