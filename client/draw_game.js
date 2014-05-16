@@ -136,8 +136,10 @@ var drawTime = function(ctx, clock, player, opponent) {
   ctx.textAlign = "left";
   ctx.fillText("Time: " + Math.round(clock), 10, 20);
   ctx.fillStyle = player.color
-  ctx.fillText("Your Score: " + player.score, 10, 40);
-  if (opponent != "none") {
+  if (opponent === "none") {
+    ctx.fillText("Asteroids Hit: " + player.score, 10, 40);
+  } else {
+    ctx.fillText("Your Score: " + player.score, 10, 40);
     ctx.fillStyle = opponent.color
     ctx.fillText("Opponent's Score: " + opponent.score, 10, 60);
   }
