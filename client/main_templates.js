@@ -11,7 +11,7 @@ Template.mainLobby.username = function() {
 };
 
 Template.mainLobby.events({
-  "click .button.set-name": function(event) {
+  "submit form.name": function(event) {
     event.preventDefault();
     
     var username = $(event.currentTarget).parent().find("input").val();
